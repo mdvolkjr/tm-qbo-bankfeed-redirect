@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QBO → Bank Feed Redirect
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      1.7
 // @description  Redirects QBO homepage to Bank Feed. Adds an escape button to visit the homepage intentionally.
 // @author       Michael Volk
 // @match        https://qbo.intuit.com/*
@@ -101,34 +101,16 @@
   });
 
   // ── Inject into the global header center node ──────────────────────────────
-  // QBO renders late as a SPA, so poll via MutationObserver until the target exists.
+  // QBO renders late as a SPA; observe until the target exists then inject.
   function injectButton() {
-    if (document.getElementById('qbo-homepage-btn')) return true; // already injected
+    if (document.getElementById('qbo-homepage-btn')) return true;
 
     const target = document.querySelector('.global-header-container.container-center');
-    console.log('[QBO Redirect] header target:', target);
+    if (!target) return false;
 
-    if (target) {
-      target.appendChild(btn);
-      console.log('[QBO Redirect] button injected into header');
-      return true;
-    }
-
-    // Fallback: just put it on the page so we know the script is running
-    if (document.body) {
-      // Re-apply fixed positioning as fallback
-      btn.style.position = 'fixed';
-      btn.style.bottom = '18px';
-      btn.style.right = '18px';
-      btn.style.zIndex = '99999';
-      btn.style.background = '#0077C5';
-      btn.style.marginLeft = '0';
-      document.body.appendChild(btn);
-      console.log('[QBO Redirect] button injected into body (fallback)');
-      return true;
-    }
-
-    return false;
+    target.appendChild(btn);
+    console.log('[QBO Redirect] button injected into header');
+    return true;
   }
 
   if (!injectButton()) {
