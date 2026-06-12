@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QBO → Bank Feed Redirect
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.6
 // @description  Redirects QBO homepage to Bank Feed. Adds an escape button to visit the homepage intentionally.
 // @author       Michael Volk
 // @match        https://qbo.intuit.com/*
@@ -64,15 +64,16 @@
   // Initial load check
   checkAndRedirect();
 
-  // ── Inject the "Go to Homepage" escape button ──────────────────────────────const btn = document.createElement('button');
+  // ── Inject the "Go to Homepage" escape button ──────────────────────────────
+  const btn = document.createElement('button');
   btn.id = 'qbo-homepage-btn';
   btn.textContent = '⌂ Homepage';
   btn.title = 'Go to QBO Homepage (bypass redirect)';
 
   Object.assign(btn.style, {
-    background: 'transparent',
+    background: '#0077C5',
     color: '#fff',
-    border: '1px solid rgba(255,255,255,0.45)',
+    border: 'none',
     borderRadius: '4px',
     padding: '4px 10px',
     fontSize: '12px',
@@ -80,7 +81,7 @@
     fontWeight: '600',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
-    opacity: '0.85',
+    opacity: '1',
     transition: 'opacity 0.15s, background 0.15s',
     marginLeft: '10px',
     flexShrink: '0',
@@ -88,12 +89,10 @@
   });
 
   btn.addEventListener('mouseenter', () => {
-    btn.style.opacity = '1';
-    btn.style.background = 'rgba(255,255,255,0.15)';
+    btn.style.background = '#005c99';
   });
   btn.addEventListener('mouseleave', () => {
-    btn.style.opacity = '0.85';
-    btn.style.background = 'transparent';
+    btn.style.background = '#0077C5';
   });
 
   btn.addEventListener('click', () => {
